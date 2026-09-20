@@ -1,17 +1,13 @@
 "use client";
 
 import { Monitor } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
-
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const applySystemTheme = (event?: MediaQueryListEvent) => {
-      const dark = event?.matches ?? media.matches;
-      setIsDark(dark);
-      document.documentElement.classList.toggle("dark", dark);
+      document.documentElement.classList.toggle("dark", event?.matches ?? media.matches);
     };
 
     applySystemTheme();
@@ -21,11 +17,11 @@ export function ThemeToggle() {
 
   return (
     <span
-      title={`Mengikuti mode ${isDark ? "gelap" : "terang"} sistem`}
-      aria-label={`Mode ${isDark ? "gelap" : "terang"}, mengikuti pengaturan sistem`}
+      title="Tema mengikuti pengaturan sistem"
+      aria-label="Tema mengikuti pengaturan sistem"
       className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] text-[var(--muted)]"
     >
-      <Monitor className="h-4 w-4" />
+      <Monitor className="h-4 w-4" aria-hidden="true" />
     </span>
   );
 }
