@@ -30,6 +30,23 @@
   --glow: rgba(53, 112, 175, 0.22);
 }
 
+/* Render the correct system theme before JavaScript hydrates. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.dark) {
+    --background: #071321;
+    --foreground: #e9f1fb;
+    --surface: rgba(15, 34, 57, 0.68);
+    --surface-strong: rgba(17, 39, 65, 0.88);
+    --border: rgba(148, 163, 184, 0.2);
+    --muted: #9aabc0;
+    --primary: #a9c9ef;
+    --primary-strong: #d9e9fb;
+    --accent: #e4b76d;
+    --accent-soft: rgba(180, 126, 55, 0.2);
+    --glow: rgba(53, 112, 175, 0.22);
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -13,7 +13,7 @@ export function Header() {
           <span className="truncate text-sm font-bold tracking-tight sm:text-base">Eksposisi Alkitab</span>
         </Link>
         <nav className="flex items-center gap-1.5 text-sm text-[var(--muted)] sm:gap-2" aria-label="Navigasi utama">
-          <Link href="/" className="hidden rounded-lg px-3 py-2 transition hover:bg-[var(--accent-soft)] hover:text-[var(--foreground)] sm:inline">Kitab</Link>
+          <Link href="/" aria-current="page" className="rounded-lg bg-[var(--accent-soft)] px-3 py-2 font-semibold text-[var(--foreground)] transition hover:text-[var(--accent)]">Kitab</Link>
           <Link href="/tema" className="hidden rounded-lg px-3 py-2 transition hover:bg-[var(--accent-soft)] hover:text-[var(--foreground)] sm:inline">Tema</Link>
           <Link href="/cari" className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 transition hover:bg-[var(--accent-soft)] hover:text-[var(--foreground)] sm:px-3">
             <Search className="h-4 w-4" /><span className="hidden sm:inline">Cari</span>

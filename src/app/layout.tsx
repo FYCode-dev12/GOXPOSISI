@@ -38,16 +38,6 @@ export const metadata: Metadata = {
   },
 };
 
-const THEME_INIT_SCRIPT = `
-(function () {
-  try {
-    var stored = localStorage.getItem("theme");
-    var theme = stored === "dark" || stored === "light" ? stored : "light";
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  } catch (e) {}
-})();
-`;
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -55,11 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} ${lora.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        {/* Set tema sebelum render, supaya tidak ada flash light/dark saat load. */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-      </head>
-      <body className="min-h-full flex flex-col bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+      <body className="min-h-full flex flex-col">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
