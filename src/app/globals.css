@@ -60,10 +60,14 @@ html { min-width: 320px; scroll-behavior: smooth; }
 body {
   min-width: 320px;
   overflow-x: hidden;
-  background:
+  background-color: var(--background);
+  background-image:
     radial-gradient(circle at 8% 0%, var(--glow), transparent 31rem),
-    radial-gradient(circle at 95% 12%, rgba(201, 149, 75, 0.12), transparent 25rem),
-    var(--background);
+    radial-gradient(circle at 95% 12%, rgba(201, 149, 75, 0.12), transparent 25rem);
+  background-repeat: no-repeat;
+  background-size: 62rem 62rem, 50rem 50rem;
+  background-position: -12rem -12rem, calc(100% + 10rem) -8rem;
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
