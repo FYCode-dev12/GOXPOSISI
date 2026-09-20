@@ -26,7 +26,7 @@ export default function HomePage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
       <section className="glass-panel relative mb-12 overflow-hidden rounded-3xl px-6 py-10 sm:px-10 sm:py-14">
-        <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[var(--accent)]/15 blur-3xl" />
+        <div className="pointer-events-none absolute right-6 top-6 h-48 w-48 rounded-full bg-[var(--accent)]/15 blur-3xl" />
         <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">Membaca teks dengan lebih dalam</p>
         <h1 className="max-w-2xl text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-5xl">
           Eksposisi Alkitab, Pasal per Pasal

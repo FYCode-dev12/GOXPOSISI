@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from "react";
 
 type AudioStatus = "idle" | "playing" | "paused" | "error";
 function splitSpeechText(text: string): string[] {
-  const sentences = text.replace(/\s+/g, " ").trim().match(/.{1,180}(?:\s|$)/g) ?? [];
+  const normalized = text.replace(/\bAllah\b/g, "Al-lah").replace(/\s+/g, " ").trim();
+  const sentences = normalized.match(/.{1,180}(?:\s|$)/g) ?? [];
   return sentences.map((chunk) => chunk.trim()).filter(Boolean);
 }
 
