@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GOXPOSISI
 
-## Getting Started
+Platform artikel eksposisi Alkitab pasal demi pasal. Konten ditulis dalam MDX dan dibangun sebagai halaman statis menggunakan Next.js.
 
-First, run the development server:
+## Menjalankan lokal
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Pemeriksaan sebelum deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npx tsc --noEmit
+npm run lint
+npm run build
+```
 
-## Learn More
+## Environment variable
 
-To learn more about Next.js, take a look at the following resources:
+Buat `.env.local` untuk lokal atau isi Environment Variables di platform deployment:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_SITE_URL=https://domain-kamu.com
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Nilai ini digunakan oleh metadata, sitemap, dan robots. Gunakan URL HTTPS produksi tanpa slash di bagian akhir.
 
-## Deploy on Vercel
+## Struktur konten
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Setiap kitab yang sudah memiliki artikel memiliki struktur berikut:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+content/
+└── roma/
+    ├── meta.json
+    └── pasal-1.mdx
+```
+
+Contoh `meta.json`:
+
+```json
+{
+  "name": "Roma",
+  "testament": "PB",
+  "order": 45,
+  "totalPasal": 16
+}
+```
+
+Contoh frontmatter MDX:
+
+```md
+---
+title: "Roma 1 — Kebenaran yang Dinyatakan"
+kitab: roma
+pasal: 1
+author: "Nama Penulis"
+date: 2026-09-01
+summary: "Ringkasan artikel."
+tags: ["roma", "injil"]
+---
+
+Isi eksposisi dalam Markdown/MDX.
+```
+
+Slug folder kitab harus sesuai dengan taksonomi pada `src/lib/books-taxonomy.ts`. Build akan gagal dengan pesan yang jelas apabila metadata kitab atau frontmatter artikel tidak valid.
+
+## Fitur
+
+- Navigasi kitab, pasal, dan tema
+- Pencarian artikel
+- MDX untuk artikel eksposisi
+- Dark mode dan light mode
+- Responsive glassmorphism UI
+- Text-to-speech menggunakan Web Speech API browser
+- Metadata SEO, sitemap, dan robots
+
+## Deploy ke Vercel
+
+1. Import repository ke Vercel.
+2. Set `NEXT_PUBLIC_SITE_URL` ke domain produksi.
+3. Deploy.
+4. Periksa halaman utama, artikel, pencarian, tema, `/robots.txt`, dan `/sitemap.xml`.
+5. Jalankan pemeriksaan build lokal sebelum setiap deploy.
+
+Text-to-speech tidak memerlukan API key. Ketersediaan suara bergantung pada browser dan sistem operasi pengunjung.
