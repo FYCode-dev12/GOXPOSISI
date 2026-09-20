@@ -18,8 +18,8 @@ function groupBooks(books: BookWithContent[]) {
   })).filter((entry) => entry.books.length > 0);
 }
 
-export default function HomePage() {
-  const books = getAllBooksWithContent();
+export default async function HomePage() {
+  const books = await getAllBooksWithContent();
   const pl = groupBooks(books.filter((book) => book.testament === "PL"));
   const pb = groupBooks(books.filter((book) => book.testament === "PB"));
 

@@ -8,15 +8,15 @@ import {
 } from "@/lib/content";
 import { BreadcrumbNav } from "@/components/navigation/BreadcrumbNav";
 
-export function generateStaticParams() {
-  return getAllBooksWithContent().map((book) => ({ kitab: book.slug }));
+export async function generateStaticParams() {
+  return (await getAllBooksWithContent()).map((book) => ({ kitab: book.slug }));
 }
 
 export async function generateMetadata(
   props: PageProps<"/kitab/[kitab]">
 ): Promise<Metadata> {
   const { kitab } = await props.params;
-  const book = getBookWithContent(kitab);
+  const book = await getBookWithContent(kitab);
   if (!book) return {};
 
   return {
@@ -27,7 +27,7 @@ export async function generateMetadata(
 
 export default async function BookPage(props: PageProps<"/kitab/[kitab]">) {
   const { kitab } = await props.params;
-  const book = getBookWithContent(kitab);
+  const book = await getBookWithContent(kitab);
   if (!book || book.availablePasal.length === 0) notFound();
 
   return (
@@ -50,24 +50,19 @@ export default async function BookPage(props: PageProps<"/kitab/[kitab]">) {
       </p>
 
       <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-        {book.availablePasal.map((pasal) => {
-          const article = getArticle(book.slug, pasal);
-          return (
-            <li key={pasal}>
-              <Link
-                href={`/kitab/${book.slug}/${pasal}`}
-                className="block rounded-lg border border-zinc-200 p-4 transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
-              >
-                <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                  Pasal {pasal}
-                </span>
-                <div className="mt-1 font-medium text-zinc-900 dark:text-zinc-100">
-                  {article?.frontmatter.title ?? `${book.name} ${pasal}`}
-                </div>
-              </Link>
-            </li>
-          );
-        })}
+        {(await Promise.all(book.availablePasal.map(async (pasal) => ({ pasal, article: await getArticle(book.slug, pasal) })))).map(({ pasal, article }) => (
+          <li key={pasal}>
+            <Link
+              href={`/kitab/${book.slug}/${pasal}`}
+              className="block rounded-lg border border-zinc-200 p-4 transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+            >
+              <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Pasal {pasal}</span>
+              <div className="mt-1 font-medium text-zinc-900 dark:text-zinc-100">
+                {article?.frontmatter.title ?? `${book.name} ${pasal}`}
+              </div>
+            </Link>
+          </li>
+        ))}
       </ul>
     </div>
   );

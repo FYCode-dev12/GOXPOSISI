@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   description: "Cari artikel eksposisi Alkitab berdasarkan judul atau isi.",
 };
 
-export default function CariPage() {
-  const data = buildSearchIndex();
+export default async function CariPage() {
+  const data = await buildSearchIndex();
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">

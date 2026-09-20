@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 import { getAllBooksWithContent } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const books = getAllBooksWithContent();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const books = await getAllBooksWithContent();
 
   const bookRoutes: MetadataRoute.Sitemap = books.map((book) => ({
     url: `${SITE_URL}/kitab/${book.slug}`,

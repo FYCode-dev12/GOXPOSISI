@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   description: "Jelajahi artikel eksposisi Alkitab berdasarkan tema.",
 };
 
-export default function TemaPage() {
-  const tags = getAllTags();
+export default async function TemaPage() {
+  const tags = await getAllTags();
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">

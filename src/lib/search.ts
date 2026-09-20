@@ -17,8 +17,8 @@ export interface SearchEntry {
 const MAX_CONTENT_CHARS = 4000;
 
 /** Bangun data index pencarian dari seluruh artikel yang tersedia. */
-export function buildSearchIndex(): SearchEntry[] {
-  return getAllArticles().map((article) => {
+export async function buildSearchIndex(): Promise<SearchEntry[]> {
+  return (await getAllArticles()).map((article) => {
     const book = getBookTaxonomy(article.frontmatter.kitab);
     const plainContent = stripMarkdown(article.content).slice(
       0,

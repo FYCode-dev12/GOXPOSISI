@@ -5,8 +5,8 @@ import { getAllTags, getArticlesByTag } from "@/lib/content";
 import { BreadcrumbNav } from "@/components/navigation/BreadcrumbNav";
 import { getBookTaxonomy } from "@/lib/books-taxonomy";
 
-export function generateStaticParams() {
-  return getAllTags().map((tag) => ({ tag }));
+export async function generateStaticParams() {
+  return (await getAllTags()).map((tag) => ({ tag }));
 }
 
 export async function generateMetadata(
@@ -21,7 +21,7 @@ export async function generateMetadata(
 
 export default async function TagPage(props: PageProps<"/tema/[tag]">) {
   const { tag } = await props.params;
-  const articles = getArticlesByTag(tag);
+  const articles = await getArticlesByTag(tag);
   if (articles.length === 0) notFound();
 
   return (
