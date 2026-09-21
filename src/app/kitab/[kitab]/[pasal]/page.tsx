@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { MDXRemote } from "next-mdx-remote/rsc";
+import { MarkdownArticle } from "@/components/article/MarkdownArticle";
 import { getAllBooksWithContent, getArticle, getBookWithContent } from "@/lib/content";
 import { BreadcrumbNav } from "@/components/navigation/BreadcrumbNav";
 import { ArticleLayout } from "@/components/article/ArticleLayout";
@@ -41,7 +41,7 @@ export default async function ArticlePage(props: PageProps<"/kitab/[kitab]/[pasa
         <ArticleMeta frontmatter={article.frontmatter} />
         <ArticleAudio text={`${article.frontmatter.title}. ${article.frontmatter.summary ?? ""}. ${stripMarkdown(article.content)}`} />
         {article.frontmatter.summary && <p className="mt-6 text-lg leading-relaxed text-zinc-600 italic dark:text-zinc-300">{article.frontmatter.summary}</p>}
-        <div className="mt-6"><MDXRemote source={article.content} /></div>
+        <div className="mt-6"><MarkdownArticle content={article.content} /></div>
       </ArticleLayout>
       <nav className="mx-auto flex max-w-[70ch] items-center justify-between gap-4 border-t border-zinc-200 px-4 py-8 text-sm sm:px-6 dark:border-zinc-800">
         {prevPasal ? <Link href={`/kitab/${book.slug}/${prevPasal}`} className="text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white">&larr; Pasal {prevPasal}</Link> : <span />}

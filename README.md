@@ -1,6 +1,6 @@
 # GOXPOSISI
 
-Platform artikel eksposisi Alkitab pasal demi pasal. Konten ditulis dalam MDX dan dibangun sebagai halaman statis menggunakan Next.js.
+Platform artikel eksposisi Alkitab pasal demi pasal. Konten ditulis dalam Markdown dan dibangun sebagai halaman statis menggunakan Next.js.
 
 ## Menjalankan lokal
 
@@ -37,7 +37,7 @@ Setiap kitab yang sudah memiliki artikel memiliki struktur berikut:
 content/
 └── roma/
     ├── meta.json
-    └── pasal-1.mdx
+    └── pasal-1.md
 ```
 
 Contoh `meta.json`:
@@ -51,7 +51,7 @@ Contoh `meta.json`:
 }
 ```
 
-Contoh frontmatter MDX:
+Contoh frontmatter Markdown:
 
 ```md
 ---
@@ -64,7 +64,7 @@ summary: "Ringkasan artikel."
 tags: ["roma", "injil"]
 ---
 
-Isi eksposisi dalam Markdown/MDX.
+Isi eksposisi dalam Markdown biasa.
 ```
 
 Slug folder kitab harus sesuai dengan taksonomi pada `src/lib/books-taxonomy.ts`. Build akan gagal dengan pesan yang jelas apabila metadata kitab atau frontmatter artikel tidak valid.
@@ -73,7 +73,7 @@ Slug folder kitab harus sesuai dengan taksonomi pada `src/lib/books-taxonomy.ts`
 
 - Navigasi kitab, pasal, dan tema
 - Pencarian artikel
-- MDX untuk artikel eksposisi
+- Markdown untuk artikel eksposisi
 - Dark mode dan light mode
 - Responsive glassmorphism UI
 - Text-to-speech menggunakan Web Speech API browser

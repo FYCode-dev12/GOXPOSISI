@@ -44,7 +44,7 @@ export interface BookMeta {
 }
 
 /**
- * Frontmatter pada setiap file pasal-N.mdx
+ * Frontmatter pada setiap file pasal-N.md
  */
 export interface ArticleFrontmatter {
   title: string;

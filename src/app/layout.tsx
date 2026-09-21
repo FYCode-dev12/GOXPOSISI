@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Lora } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
+import { PublicHeader } from "@/components/layout/PublicHeader";
 import { Footer } from "@/components/layout/Footer";
 import { SITE_URL } from "@/lib/site";
 
@@ -46,7 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <Header />
+        <PublicHeader />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

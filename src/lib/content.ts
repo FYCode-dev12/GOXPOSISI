@@ -22,10 +22,12 @@ function getStaticMeta(bookSlug: string): BookMeta | null {
   if (!taxonomy || raw.name !== taxonomy.name || raw.testament !== taxonomy.testament || typeof raw.order !== "number" || !Number.isInteger(raw.order) || typeof raw.totalPasal !== "number" || !Number.isInteger(raw.totalPasal) || raw.totalPasal <= 0) throw new Error(`Metadata kitab tidak valid: content/${bookSlug}/meta.json`);
   return raw as BookMeta;
 }
-function staticPasals(bookSlug: string) { return safeReadDir(path.join(CONTENT_DIR, bookSlug)).map((file) => file.match(/^pasal-(\d+)\.mdx?$/)).filter((m): m is RegExpMatchArray => Boolean(m)).map((m) => Number(m[1])).sort((a, b) => a - b); }
+function staticPasals(bookSlug: string) { return safeReadDir(path.join(CONTENT_DIR, bookSlug)).map((file) => file.match(/^pasal-(\d+)\.md(?:x)?$/)).filter((m): m is RegExpMatchArray => Boolean(m)).map((m) => Number(m[1])).sort((a, b) => a - b); }
 function getStaticArticle(bookSlug: string, pasal: number): Article | null {
   if (!isSafeBookSlug(bookSlug) || !isSafePasal(pasal)) return null;
-  const file = path.join(CONTENT_DIR, bookSlug, `pasal-${pasal}.mdx`);
+  const mdFile = path.join(CONTENT_DIR, bookSlug, `pasal-${pasal}.md`);
+  const mdxFile = path.join(CONTENT_DIR, bookSlug, `pasal-${pasal}.mdx`);
+  const file = fs.existsSync(mdFile) ? mdFile : mdxFile;
   if (!fs.existsSync(file)) return null;
   const validated = validateArticleMdx(fs.readFileSync(file, "utf8"), pasal);
   return { frontmatter: validated.frontmatter, content: validated.content, slug: `${bookSlug}/pasal-${pasal}` };
