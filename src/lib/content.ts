@@ -19,7 +19,7 @@ function getStaticMeta(bookSlug: string): BookMeta | null {
   if (!fs.existsSync(file)) return null;
   const raw = JSON.parse(fs.readFileSync(file, "utf8")) as Partial<BookMeta>;
   const taxonomy = getBookTaxonomy(bookSlug);
-  if (!taxonomy || raw.name !== taxonomy.name || raw.testament !== taxonomy.testament || typeof raw.order !== "number" || !Number.isInteger(raw.order) || typeof raw.totalPasal !== "number" || !Number.isInteger(raw.totalPasal) || raw.totalPasal <= 0) throw new Error(`Metadata kitab tidak valid: content/${bookSlug}/meta.json`);
+  if (!taxonomy || raw.name !== taxonomy.name || raw.testament !== taxonomy.testament || typeof raw.order !== "number" || !Number.isInteger(raw.order) || typeof raw.totalPasal !== "number" || !Number.isInteger(raw.totalPasal) || raw.totalPasal <= 0 || (raw.background !== undefined && typeof raw.background !== "string")) throw new Error(`Metadata kitab tidak valid: content/${bookSlug}/meta.json`);
   return raw as BookMeta;
 }
 function staticPasals(bookSlug: string) { return safeReadDir(path.join(CONTENT_DIR, bookSlug)).map((file) => file.match(/^pasal-(\d+)\.md(?:x)?$/)).filter((m): m is RegExpMatchArray => Boolean(m)).map((m) => Number(m[1])).sort((a, b) => a - b); }

@@ -41,6 +41,7 @@ export interface BookMeta {
   testament: Testament;
   order: number;
   totalPasal: number;
+  background?: string;
 }
 
 /**
