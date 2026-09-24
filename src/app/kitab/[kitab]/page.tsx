@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getAllBooksWithContent, getArticle, getBookWithContent } from "@/lib/content";
+import { getAllBooksWithContent, getArticle, getBookBackground, getBookWithContent } from "@/lib/content";
 import { BreadcrumbNav } from "@/components/navigation/BreadcrumbNav";
+import { MarkdownArticle } from "@/components/article/MarkdownArticle";
 
 export async function generateStaticParams() {
   return (await getAllBooksWithContent()).map((book) => ({ kitab: book.slug }));
@@ -19,6 +20,7 @@ export default async function BookPage(props: PageProps<"/kitab/[kitab]">) {
   const { kitab } = await props.params;
   const book = await getBookWithContent(kitab);
   if (!book || book.availablePasal.length === 0) notFound();
+  const background = await getBookBackground(book.slug);
 
   const articles = await Promise.all(book.availablePasal.map(async (pasal) => ({ pasal, article: await getArticle(book.slug, pasal) })));
 
@@ -34,7 +36,7 @@ export default async function BookPage(props: PageProps<"/kitab/[kitab]">) {
       <section className="glass-panel mt-8 rounded-3xl p-6 sm:p-8" aria-labelledby="background-title">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">Sebelum pembahasan</p>
         <h2 id="background-title" className="mt-2 text-2xl font-semibold tracking-tight text-[var(--foreground)]">Latar belakang Kitab {book.name}</h2>
-        <p className="mt-4 max-w-3xl text-base leading-8 text-[var(--muted)]">{book.meta.background ?? `Bagian ini memberikan konteks awal untuk membaca Kitab ${book.name}. Latar belakang yang lebih lengkap akan ditambahkan.`}</p>
+        <div className="prose-article mt-4 max-w-3xl text-base leading-8 text-[var(--muted)]">{background ? <MarkdownArticle content={background.content} /> : <p>Latar belakang Kitab {book.name} belum tersedia.</p>}</div>
       </section>
 
       <section className="mt-10" aria-labelledby="chapters-title">

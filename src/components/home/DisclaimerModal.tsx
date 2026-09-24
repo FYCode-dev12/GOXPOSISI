@@ -1,24 +1,59 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
 export function DisclaimerModal() {
   const [open, setOpen] = useState(true);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const dialog = dialogRef.current;
+    const focusable = dialog?.querySelector<HTMLElement>("button, a[href]");
+    focusable?.focus();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !dialog) return;
+      const elements = Array.from(dialog.querySelectorAll<HTMLElement>("button, a[href]"));
+      if (!elements.length) return;
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
 
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/55 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="disclaimer-title">
-      <div className="glass-panel max-h-[min(42rem,90vh)] w-full max-w-xl overflow-y-auto rounded-3xl p-6 shadow-2xl sm:p-8">
+      <div ref={dialogRef} className="glass-panel max-h-[min(42rem,90vh)] w-full max-w-xl overflow-y-auto rounded-3xl p-6 shadow-2xl sm:p-8">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">Sebelum membaca</p>
             <h2 id="disclaimer-title" className="mt-2 text-2xl font-semibold tracking-tight text-[var(--foreground)]">Catatan pelayanan</h2>
           </div>
-          <button type="button" onClick={() => setOpen(false)} aria-label="Tutup disclaimer" className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[var(--border)] text-[var(--muted)] transition hover:bg-[var(--accent-soft)] hover:text-[var(--foreground)]">
-            <X className="h-4 w-4" />
+          <button autoFocus type="button" onClick={() => setOpen(false)} aria-label="Tutup disclaimer" className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[var(--border)] text-[var(--muted)] transition hover:bg-[var(--accent-soft)] hover:text-[var(--foreground)]">
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
         <div className="mt-5 space-y-4 text-sm leading-7 text-[var(--muted)] sm:text-base">

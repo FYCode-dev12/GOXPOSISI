@@ -25,7 +25,7 @@ export default async function HomePage() {
   const pb = groupBooks(books.filter((book) => book.testament === "PB"));
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-14">
+    <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-14">
       <DisclaimerModal />
       <section className="glass-panel relative mb-8 overflow-hidden rounded-3xl px-6 py-9 sm:px-10 sm:py-12">
         <div className="pointer-events-none absolute right-6 top-6 h-48 w-48 rounded-full bg-[var(--accent)]/15 blur-3xl" />
@@ -49,7 +49,7 @@ export default async function HomePage() {
         <TestamentSection title="Perjanjian Lama" groups={pl} />
         <TestamentSection title="Perjanjian Baru" groups={pb} />
       </div>
-    </div>
+    </main>
   );
 }
 

@@ -15,7 +15,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
     return (
       <div className="min-h-full">
         {!isLogin && <AdminHeader />}
-        <main className={isLogin ? "min-h-screen" : "min-h-[calc(100vh-4.25rem)]"}>{children}</main>
+        <div className={isLogin ? "min-h-screen" : "min-h-[calc(100vh-4.25rem)]"}>{children}</div>
       </div>
     );
   }
@@ -23,7 +23,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-full flex-col">
       <PublicHeader />
-      <main className="flex-1">{children}</main>
+      <div className="flex-1">{children}</div>
       <Footer />
     </div>
   );

@@ -25,6 +25,7 @@ export async function generateMetadata(props: PageProps<"/kitab/[kitab]/[pasal]"
 
 export default async function ArticlePage(props: PageProps<"/kitab/[kitab]/[pasal]">) {
   const { kitab, pasal } = await props.params;
+  if (!/^[1-9]\d*$/.test(pasal)) notFound();
   const pasalNumber = Number(pasal);
   const book = await getBookWithContent(kitab);
   const article = await getArticle(kitab, pasalNumber);

@@ -27,6 +27,9 @@ export async function proxy(request: NextRequest) {
   if (pathname.startsWith("/admin")) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.redirect(new URL("/admin/login", request.url));
+    if (user.app_metadata?.role !== "admin") {
+      return NextResponse.redirect(new URL("/admin/login?error=forbidden", request.url));
+    }
   }
   return response;
 }

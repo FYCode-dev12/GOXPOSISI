@@ -32,7 +32,7 @@
 
 /* Render the correct system theme before JavaScript hydrates. */
 @media (prefers-color-scheme: dark) {
-  :root:not(.dark) {
+  :root:not(.dark):not(.light) {
     --background: #071321;
     --foreground: #e9f1fb;
     --surface: rgba(15, 34, 57, 0.68);
@@ -46,6 +46,25 @@
     --glow: rgba(53, 112, 175, 0.22);
   }
 }
+
+/* Manual light mode must override the device's dark preference. */
+.light {
+  --background: #eef3f9;
+  --foreground: #10233f;
+  --surface: rgba(255, 255, 255, 0.64);
+  --surface-strong: rgba(255, 255, 255, 0.84);
+  --border: rgba(148, 163, 184, 0.28);
+  --muted: #61718a;
+  --primary: #102a4c;
+  --primary-strong: #081b35;
+  --accent: #c9954b;
+  --accent-soft: #f5e9d5;
+  --glow: rgba(87, 145, 206, 0.24);
+}
+
+.dark { color-scheme: dark; }
+.light { color-scheme: light; }
+:root:not(.dark):not(.light) { color-scheme: light dark; }
 
 @theme inline {
   --color-background: var(--background);

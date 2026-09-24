@@ -5,10 +5,36 @@ import { getBookTaxonomy } from "@/lib/books-taxonomy";
 import { getSupabasePublicClient } from "@/lib/supabase/public";
 import { validateArticleMdx } from "@/lib/article-validation";
 
+export interface BookBackground {
+  kitab: string;
+  content: string;
+}
+
+export async function getBookBackground(bookSlug: string): Promise<BookBackground | null> {
+  if (!isSafeBookSlug(bookSlug)) return null;
+  const client = getSupabasePublicClient();
+  if (!client) return null;
+  const { data, error } = await client.from("book_backgrounds").select("kitab,content").eq("kitab", bookSlug).maybeSingle();
+  if (error) {
+    if (error.code === "42P01") return null;
+    throw new Error(`Gagal membaca latar belakang kitab: ${error.message}`);
+  }
+  return data;
+}
+
+export async function getBookBackgrounds(): Promise<BookBackground[]> {
+  const client = getSupabasePublicClient();
+  if (!client) return [];
+  const { data, error } = await client.from("book_backgrounds").select("kitab,content");
+  if (error) throw new Error(`Gagal membaca latar belakang kitab: ${error.message}`);
+  return data ?? [];
+}
+
+function isSafeBookSlug(slug: string) { return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) && Boolean(getBookTaxonomy(slug)); }
+
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const SELECT = "kitab,pasal,title,summary,tags,author,date,content,status";
 
-function isSafeBookSlug(slug: string) { return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) && Boolean(getBookTaxonomy(slug)); }
 function isSafePasal(pasal: number) { return Number.isInteger(pasal) && pasal > 0; }
 function safeReadDir(dir: string): string[] { try { return fs.readdirSync(dir); } catch { return []; } }
 function staticBookSlugs() { return safeReadDir(CONTENT_DIR).filter((entry) => isSafeBookSlug(entry) && fs.statSync(path.join(CONTENT_DIR, entry)).isDirectory() && fs.existsSync(path.join(CONTENT_DIR, entry, "meta.json"))); }
@@ -19,7 +45,7 @@ function getStaticMeta(bookSlug: string): BookMeta | null {
   if (!fs.existsSync(file)) return null;
   const raw = JSON.parse(fs.readFileSync(file, "utf8")) as Partial<BookMeta>;
   const taxonomy = getBookTaxonomy(bookSlug);
-  if (!taxonomy || raw.name !== taxonomy.name || raw.testament !== taxonomy.testament || typeof raw.order !== "number" || !Number.isInteger(raw.order) || typeof raw.totalPasal !== "number" || !Number.isInteger(raw.totalPasal) || raw.totalPasal <= 0 || (raw.background !== undefined && typeof raw.background !== "string")) throw new Error(`Metadata kitab tidak valid: content/${bookSlug}/meta.json`);
+  if (!taxonomy || raw.name !== taxonomy.name || raw.testament !== taxonomy.testament || typeof raw.order !== "number" || !Number.isInteger(raw.order) || typeof raw.totalPasal !== "number" || !Number.isInteger(raw.totalPasal) || raw.totalPasal <= 0) throw new Error(`Metadata kitab tidak valid: content/${bookSlug}/meta.json`);
   return raw as BookMeta;
 }
 function staticPasals(bookSlug: string) { return safeReadDir(path.join(CONTENT_DIR, bookSlug)).map((file) => file.match(/^pasal-(\d+)\.md(?:x)?$/)).filter((m): m is RegExpMatchArray => Boolean(m)).map((m) => Number(m[1])).sort((a, b) => a - b); }
