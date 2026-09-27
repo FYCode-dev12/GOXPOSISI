@@ -3,7 +3,7 @@
 import { Pause, Play, Square, Volume2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-type AudioStatus = "idle" | "loading" | "playing" | "paused" | "error";
+type AudioStatus = "idle" | "playing" | "paused" | "error";
 
 function splitSpeechText(text: string): string[] {
   const normalized = text.replace(/\bAllah\b/g, "Al-lah").replace(/\s+/g, " ").trim();
