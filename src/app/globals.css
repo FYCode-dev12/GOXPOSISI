@@ -2,32 +2,49 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root {
-  --background: #eef3f9;
-  --foreground: #10233f;
-  --surface: rgba(255, 255, 255, 0.64);
-  --surface-strong: rgba(255, 255, 255, 0.84);
-  --border: rgba(148, 163, 184, 0.28);
-  --muted: #61718a;
-  --primary: #102a4c;
-  --primary-strong: #081b35;
-  --accent: #c9954b;
-  --accent-soft: #f5e9d5;
-  --glow: rgba(87, 145, 206, 0.24);
+@font-face {
+  font-family: "Geist Mono";
+  src: local("Geist Mono"), local("GeistMono-Regular"), monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
 }
 
-.dark {
-  --background: #071321;
-  --foreground: #e9f1fb;
-  --surface: rgba(15, 34, 57, 0.68);
-  --surface-strong: rgba(17, 39, 65, 0.88);
-  --border: rgba(148, 163, 184, 0.2);
-  --muted: #9aabc0;
-  --primary: #a9c9ef;
-  --primary-strong: #d9e9fb;
-  --accent: #e4b76d;
-  --accent-soft: rgba(180, 126, 55, 0.2);
-  --glow: rgba(53, 112, 175, 0.22);
+@font-face {
+  font-family: "Geist Mono";
+  src: local("Geist Mono Medium"), local("GeistMono-Medium"), monospace;
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --background: #eef3f9;
+    --foreground: #10233f;
+    --surface: rgba(255, 255, 255, 0.64);
+    --surface-strong: rgba(255, 255, 255, 0.84);
+    --border: rgba(148, 163, 184, 0.28);
+    --muted: #61718a;
+    --primary: #102a4c;
+    --primary-strong: #081b35;
+    --accent: #c9954b;
+    --accent-soft: #f5e9d5;
+    --glow: rgba(87, 145, 206, 0.24);
+  }
+  .dark {
+    --background: #071321;
+    --foreground: #e9f1fb;
+    --surface: rgba(15, 34, 57, 0.68);
+    --surface-strong: rgba(17, 39, 65, 0.88);
+    --border: rgba(148, 163, 184, 0.2);
+    --muted: #9aabc0;
+    --primary: #a9c9ef;
+    --primary-strong: #d9e9fb;
+    --accent: #e4b76d;
+    --accent-soft: rgba(180, 126, 55, 0.2);
+    --glow: rgba(53, 112, 175, 0.22);
+  }
 }
 
 /* Render the correct system theme before JavaScript hydrates. */
@@ -70,7 +87,6 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-lora);
 }
 
