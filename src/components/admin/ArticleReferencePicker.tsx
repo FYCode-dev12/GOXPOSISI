@@ -22,7 +22,6 @@ export function ArticleReferencePicker({
 
   function selectBook(value: string) {
     onBookChange(value);
-    onChapterChange(1);
   }
 
   return (
