@@ -31,11 +31,9 @@ export default function AdminUploadPage() {
     setSelectedBook(book);
     setSelectedChapter(chapter);
     if (mode !== "article") return;
-    if (!raw.trim() || window.confirm("Ganti isi editor dengan template frontmatter pasal ini?")) {
-      const name = BOOKS_TAXONOMY.find((item) => item.slug === book)?.name ?? book;
-      setRaw(articleTemplate(book, chapter));
-      setMessage(`Template ${name} pasal ${chapter} sudah dibuat.`);
-    }
+    const name = BOOKS_TAXONOMY.find((item) => item.slug === book)?.name ?? book;
+    setRaw(articleTemplate(book, chapter));
+    setMessage(`Template ${name} pasal ${chapter} sudah dibuat.`);
   }
 
   function loadFile(file?: File) {
