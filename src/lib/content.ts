@@ -30,6 +30,17 @@ export async function getBookBackgrounds(): Promise<BookBackground[]> {
   return data ?? [];
 }
 
+export async function getAllBooksWithBackgrounds() {
+  const backgrounds = await getBookBackgrounds();
+  return backgrounds
+    .map((background) => {
+      const taxonomy = getBookTaxonomy(background.kitab);
+      return taxonomy ? { ...taxonomy, background } : null;
+    })
+    .filter((book): book is NonNullable<typeof book> => book !== null)
+    .sort((a, b) => a.canonicalOrder - b.canonicalOrder);
+}
+
 function isSafeBookSlug(slug: string) { return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) && Boolean(getBookTaxonomy(slug)); }
 
 const CONTENT_DIR = path.join(process.cwd(), "content");

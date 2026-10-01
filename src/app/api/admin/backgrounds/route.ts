@@ -43,6 +43,8 @@ export async function PUT(request: Request) {
     }
     revalidatePath("/");
     revalidatePath(`/kitab/${body.kitab}`);
+    revalidatePath(`/latar-belakang/${body.kitab}`);
+    revalidatePath("/latar-belakang");
     revalidatePath("/sitemap.xml");
     return NextResponse.json({ background: data });
   } catch {
@@ -65,6 +67,8 @@ export async function DELETE(request: Request) {
   }
   revalidatePath("/");
   revalidatePath(`/kitab/${body.kitab}`);
+  revalidatePath(`/latar-belakang/${body.kitab}`);
+  revalidatePath("/latar-belakang");
   revalidatePath("/sitemap.xml");
   return NextResponse.json({ ok: true });
 }

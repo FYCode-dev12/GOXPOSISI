@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Upload, FileText } from "lucide-react";
+import { LogOut, Upload, FileText, BookOpen } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 const links = [
   { href: "/admin/articles", label: "Artikel", icon: FileText },
+  { href: "/admin/backgrounds", label: "Latar kitab", icon: BookOpen },
   { href: "/admin/upload", label: "Upload", icon: Upload },
 ];
 

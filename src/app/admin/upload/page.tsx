@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArticleReferencePicker } from "@/components/admin/ArticleReferencePicker";
 import { BOOKS_TAXONOMY } from "@/lib/books-taxonomy";
 
@@ -26,6 +26,35 @@ export default function AdminUploadPage() {
   const [message, setMessage] = useState("");
   const [dragging, setDragging] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      const book = params.get("kitab");
+      if (params.get("mode") === "background") setMode("background");
+      if (book && BOOKS_TAXONOMY.some((item) => item.slug === book)) setSelectedBook(book);
+    }, 0);
+    const params = new URLSearchParams(window.location.search);
+    const book = params.get("kitab");
+    if (params.get("mode") !== "background" || !book || !BOOKS_TAXONOMY.some((item) => item.slug === book)) {
+      return () => window.clearTimeout(timer);
+    }
+    let cancelled = false;
+    void fetch("/api/admin/backgrounds", { cache: "no-store" })
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error ?? "Gagal memuat latar belakang.");
+        const existing = (result.backgrounds as Array<{ kitab: string; content: string }>).find((item) => item.kitab === book);
+        if (!cancelled && existing) setRaw(existing.content);
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) setMessage(error instanceof Error ? error.message : "Gagal memuat latar belakang.");
+      });
+    return () => {
+      window.clearTimeout(timer);
+      cancelled = true;
+    };
+  }, []);
 
   function selectReference(book: string, chapter: number) {
     setSelectedBook(book);

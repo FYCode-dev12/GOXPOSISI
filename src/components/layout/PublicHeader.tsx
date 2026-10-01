@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 const links = [
   { href: "/", label: "Kitab" },
   { href: "/tema", label: "Tema" },
+  { href: "/latar-belakang", label: "Latar belakang" },
 ];
 
 export function PublicHeader() {

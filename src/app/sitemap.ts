@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 export const revalidate = 3600; // 1 hour — book/article list changes on publish
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { getAllBooksWithContent } = await import("@/lib/content");
-  const books = await getAllBooksWithContent();
+  const { getAllBooksWithBackgrounds, getAllBooksWithContent } = await import("@/lib/content");
+  const [books, backgroundBooks] = await Promise.all([getAllBooksWithContent(), getAllBooksWithBackgrounds()]);
 
   const bookRoutes: MetadataRoute.Sitemap = [];
   const articleRoutes: MetadataRoute.Sitemap = [];
@@ -26,6 +26,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
+  const backgroundRoutes: MetadataRoute.Sitemap = backgroundBooks.map((book) => ({
+    url: `https://www.gosposisi.web.id/latar-belakang/${book.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
   return [
     {
       url: "https://www.gosposisi.web.id",
@@ -44,5 +51,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...bookRoutes,
     ...articleRoutes,
+    ...backgroundRoutes,
   ];
 }
