@@ -1,10 +1,18 @@
 import matter from "gray-matter";
 import type { ArticleFrontmatter } from "@/types/content";
-import { getBookTaxonomy } from "@/lib/books-taxonomy";
+import { BOOK_CHAPTERS, getBookTaxonomy } from "@/lib/books-taxonomy";
 
 export interface ValidatedArticle {
   frontmatter: ArticleFrontmatter;
   content: string;
+}
+
+/**
+ * Tag <script> (huruf besar/kecil apa pun) atau atribut event handler di dalam tag HTML,
+ * dengan atau tanpa tanda kutip. Teks biasa seperti `contoh="..."` di luar tag tidak dihitung.
+ */
+export function containsUnsafeHtml(text: string): boolean {
+  return /<script/i.test(text) || /<[^>]*\son\w+\s*=/i.test(text);
 }
 
 export function validateArticleMdx(raw: string, expectedPasal?: number): ValidatedArticle {
@@ -24,6 +32,8 @@ export function validateArticleMdx(raw: string, expectedPasal?: number): Validat
   else if (frontmatter.title.trim().length > 200) errors.push("title maksimal 200 karakter");
   if (typeof frontmatter.pasal !== "number" || !Number.isInteger(frontmatter.pasal) || frontmatter.pasal <= 0) errors.push("pasal harus integer positif");
   if (expectedPasal !== undefined && frontmatter.pasal !== expectedPasal) errors.push(`pasal harus ${expectedPasal}`);
+  const chapterCount = book ? BOOK_CHAPTERS[book.slug] : undefined;
+  if (chapterCount && typeof frontmatter.pasal === "number" && frontmatter.pasal > chapterCount) errors.push(`pasal melebihi jumlah pasal kitab (${chapterCount})`);
   if (frontmatter.kitab !== undefined && typeof frontmatter.kitab !== "string") errors.push("kitab harus string");
   if (typeof frontmatter.author !== "string" || !frontmatter.author.trim()) errors.push("author wajib diisi");
   else if (frontmatter.author.trim().length > 120) errors.push("author maksimal 120 karakter");
@@ -35,7 +45,7 @@ export function validateArticleMdx(raw: string, expectedPasal?: number): Validat
   if (!content.trim()) errors.push("isi artikel kosong");
   else if (content.length > 500_000) errors.push("isi artikel maksimal 500 KB");
   if (raw.length > 600_000) errors.push("file artikel terlalu besar");
-  if (content.includes("<script") || /on\w+\s*=\s*["']/i.test(content)) errors.push("HTML/script tidak diizinkan dalam Markdown");
+  if (containsUnsafeHtml(content)) errors.push("HTML/script tidak diizinkan dalam Markdown");
 
   if (errors.length) throw new Error(`Frontmatter tidak valid: ${errors.join(", ")}.`);
   return { frontmatter: frontmatter as ArticleFrontmatter, content };

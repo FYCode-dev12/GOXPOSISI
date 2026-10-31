@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { getSupabaseUser } from "@/lib/supabase/server";
 import { getBookTaxonomy } from "@/lib/books-taxonomy";
 import { enforceSameOrigin, readJsonBody, serverError } from "@/lib/admin-api";
+import { containsUnsafeHtml } from "@/lib/article-validation";
 
 const MAX_BACKGROUND_BYTES = 130_000;
 const MAX_DELETE_BYTES = 2_000;
@@ -35,7 +36,7 @@ export async function PUT(request: Request) {
     if (typeof body.kitab !== "string" || !getBookTaxonomy(body.kitab)) return NextResponse.json({ error: "Kitab tidak valid." }, { status: 400 });
     if (typeof body.content !== "string" || !body.content.trim()) return NextResponse.json({ error: "Isi latar belakang wajib diisi." }, { status: 400 });
     if (body.content.length > 120_000) return NextResponse.json({ error: "Latar belakang maksimal 120 KB." }, { status: 400 });
-    if (/<script/i.test(body.content) || /on\w+\s*=\s*["']/i.test(body.content)) return NextResponse.json({ error: "HTML/script tidak diizinkan." }, { status: 400 });
+    if (containsUnsafeHtml(body.content)) return NextResponse.json({ error: "HTML/script tidak diizinkan." }, { status: 400 });
     const { data, error } = await getSupabaseAdmin().from("book_backgrounds").upsert({ kitab: body.kitab, content: body.content }, { onConflict: "kitab" }).select("kitab,content,updated_at").single();
     if (error) {
       console.error("Background update failed", { code: error.code });

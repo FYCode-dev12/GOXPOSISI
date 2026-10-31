@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      # No Supabase variables on purpose: without them the Supabase clients return
+      # null and the build renders only the Markdown in /content, with no network
+      # calls to Supabase. Do not add real keys here.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # package-lock.json is written by npm 11. The npm 10 bundled with Node 22
+      # rejects it in `npm ci` (missing optional @emnapi/* peer entries), so use
+      # the same npm major that maintains the lockfile.
+      - name: Use npm 11
+        run: npm install -g npm@11.6.1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
