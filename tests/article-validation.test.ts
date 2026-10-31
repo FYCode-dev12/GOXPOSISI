@@ -165,10 +165,7 @@ describe("validateArticleMdx: frontmatter errors", () => {
     expect(message).toContain("title wajib diisi");
   });
 
-  // Gap, not asserted: the validator does not check pasal against BOOK_CHAPTERS,
-  // so `kitab: roma, pasal: 99` is accepted by the API even though Roma has 16
-  // chapters (only the admin picker UI limits the range).
-  it.skip("rejects a pasal beyond the book's chapter count (not implemented)", () => {
+  it("rejects a pasal beyond the book's chapter count", () => {
     expect(errorOf(article({ pasal: "17" }))).toContain("pasal");
   });
 });
@@ -214,27 +211,19 @@ describe("validateArticleMdx: HTML/script filter", () => {
     expect(errorOf(article({}, '\n<body onLoad = "x()">\n'))).toContain(BLOCKED);
   });
 
-  it("matches on*= anywhere inside a word followed by a quoted value", () => {
-    // Current behaviour: the pattern has no word boundary, so ordinary words that
-    // contain "on" (e.g. "contoh") trip the filter when followed by ="...".
-    expect(errorOf(article({}, '\nLihat contoh="ayat 1".\n'))).toContain(BLOCKED);
+  it("does not flag ordinary text that only looks like an attribute", () => {
+    expect(() => validateArticleMdx(article({}, '\nLihat contoh="ayat 1".\n'))).not.toThrow();
   });
 
   it("does not inspect frontmatter for script content", () => {
     expect(() => validateArticleMdx(article({ summary: '"<script> di ringkasan"' }))).not.toThrow();
   });
 
-  // Known bug (left skipped so CI stays green): the check uses a case-sensitive
-  // `content.includes("<script")`, so `<SCRIPT>` / `<Script>` pass. The background
-  // route uses `/<script/i`. React Markdown currently escapes raw HTML, which limits
-  // the impact, but the validator does not do what its error message claims.
-  it.skip("rejects <SCRIPT> regardless of case", () => {
+  it("rejects <SCRIPT> regardless of case", () => {
     expect(errorOf(article({}, "\n<SCRIPT>alert(1)</SCRIPT>\n"))).toContain(BLOCKED);
   });
 
-  // Known bug: unquoted handlers (`onerror=alert(1)`) are valid HTML but the regex
-  // requires a quote after `=`, so they pass the filter.
-  it.skip("rejects unquoted on* event handler attributes", () => {
+  it("rejects unquoted on* event handler attributes", () => {
     expect(errorOf(article({}, "\n<img src=x onerror=alert(1)>\n"))).toContain(BLOCKED);
   });
 });
